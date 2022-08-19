@@ -1,4 +1,4 @@
-addEventListener('load',async  () =>{
+addEventListener('load', async () => {
   const profile = await window.electronAPI.getProfile();
   document.getElementById('picture').src = profile.picture;
   document.getElementById('name').innerText = profile.name;
@@ -15,7 +15,12 @@ document.getElementById('secured-request').onclick = async () => {
     const messageJumbotron = document.getElementById('message');
     messageJumbotron.innerText = response;
     messageJumbotron.style.display = 'block';
-  } catch(error) {
+  } catch (error) {
     console.error('Error connecting to te API: ' + error);
   }
 };
+
+document.getElementById('auth-square').onclick = async () => {
+  window.electronAPI.authSquare();
+};
+

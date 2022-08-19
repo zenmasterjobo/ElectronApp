@@ -4,8 +4,9 @@ const url = require('url');
 const envVariables = require('../env-variables');
 const keytar = require('keytar');
 const os = require('os');
+const auth = require('./pkce-auth-service')
 
-const {apiIdentifier, auth0Domain, clientId} = envVariables;
+const { apiIdentifier, auth0Domain, clientId, squareClientId } = envVariables;
 
 const redirectUri = 'http://localhost/callback';
 
@@ -33,6 +34,26 @@ function getAuthenticationURL() {
     'redirect_uri=' + redirectUri;
 }
 
+const getSquareAuthURL = () => {
+  const scopes = [
+    "ITEMS_READ",
+    "MERCHANT_PROFILE_READ",
+    "PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS",
+    "PAYMENTS_WRITE",
+    "PAYMENTS_READ"
+  ]
+  const authConfig = {
+    authorizeEndpoint: "https://connect.squareupsandbox.com/oauth2/authorize",
+    clientId: squareClientId,
+    scope: scopes.join('+'),
+    redirectUri: "http://localhost/square/callback",
+    tokenEndpoint: '',
+  }
+  const PKCE_Auth = new auth.AuthService(authConfig)
+
+  return PKCE_Auth.getAuthoriseUrl()
+}
+
 async function refreshTokens() {
   const refreshToken = await keytar.getPassword(keytarService, keytarAccount);
 
@@ -40,7 +61,7 @@ async function refreshTokens() {
     const refreshOptions = {
       method: 'POST',
       url: `https://${auth0Domain}/oauth/token`,
-      headers: {'content-type': 'application/json'},
+      headers: { 'content-type': 'application/json' },
       data: {
         grant_type: 'refresh_token',
         client_id: clientId,
@@ -116,6 +137,7 @@ module.exports = {
   getAuthenticationURL,
   getLogOutUrl,
   getProfile,
+  getSquareAuthURL,
   loadTokens,
   logout,
   refreshTokens,
