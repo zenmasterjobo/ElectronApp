@@ -46,7 +46,6 @@ const getSquareAuthURL = () => {
     authorizeEndpoint: "https://connect.squareupsandbox.com/oauth2/authorize",
     clientId: squareClientId,
     scope: scopes.join('+'),
-    redirectUri: "http://localhost/square/callback",
     tokenEndpoint: '',
   }
   const PKCE_Auth = new auth.AuthService(authConfig)

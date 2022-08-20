@@ -54,7 +54,7 @@ class AuthService {
         const challengePair = AuthService.getPKCEChallengePair()
         const state = AuthService.getState()
         console.log(challengePair, state)
-        return `${this.config.authorizeEndpoint}?scope=${this.config.scope}&state=${state}&client_id=${this.config.clientId}&code_challenge=${challengePair.challenge}&redirect_uri=${this.config.redirectUri}`
+        return `${this.config.authorizeEndpoint}?scope=${this.config.scope}&state=${state}&client_id=${this.config.clientId}&code_challenge=${challengePair.challenge}`
     }
 
     //TODO: Use node sdk here to obtain the token
@@ -67,7 +67,6 @@ class AuthService {
               "client_id": "${this.config.clientId}",
               "code_verifier": "${verifier}",
               "code": "${authCode}",
-              "redirect_uri":"${this.config.redirectUri}"
             }`
         };
     }
